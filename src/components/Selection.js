@@ -1,27 +1,81 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
+import SelectionLists from "./SelectionLists";
 
-function Selection() {
+function Selection({ selectionLists, activeList, onSelect, onDelete, onEdit }) {
+  const [filteredList, setFilteredList] = useState(selectionLists);
+  const [toggleList, setToggleList] = useState(false);
+  const searchRef = useRef("");
+  const wrapperRef = useRef(null);
+
+  const handleSearch = () => {
+    const value = searchRef.current.value;
+    const newfilteredList =
+      value && value !== ""
+        ? selectionLists.filter(
+            (list) => list.label.toLowerCase().indexOf(value.toLowerCase()) > -1
+          )
+        : selectionLists;
+    setFilteredList(newfilteredList);
+  };
+
+  const handleToggle = () => {
+    setToggleList((prev) => !prev);
+  };
+
+  const handleSelect = (e, list) => {
+    onSelect(e, list);
+    setToggleList(false);
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setToggleList(false);
+      }
+    }
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="selection-container">
+    <div className="selection-container" ref={wrapperRef}>
       <div className="selection-block">
-        <div className="selection-info">
-          <div className="selection">Selection</div>
+        <div className="selection-info" onClick={handleToggle}>
+          <div className="selection">{activeList ? activeList.label : ""}</div>
           <div className="selection-icons">V</div>
         </div>
-        <div className="actions">
-          <div className="create">Create +</div>
-        </div>
       </div>
-      <div className="selection-list-container">
-        <div className="list-search">
-          <input type="text" />
+      {toggleList && (
+        <div className="selection-list-container">
+          <div className="list-search">
+            <input
+              ref={searchRef}
+              type="text"
+              onChange={handleSearch}
+              placeholder="Search"
+            />
+          </div>
+          <SelectionLists
+            selectionLists={filteredList}
+            activeList={activeList}
+            onSelect={handleSelect}
+            onDelete={onDelete}
+            onEdit={onEdit}
+          />
+          {filteredList.length === 0 &&
+            searchRef &&
+            searchRef.current.value === "" && (
+              <div className="no-records">No records</div>
+            )}
+          {filteredList.length === 0 && searchRef.current.value !== "" && (
+            <div className="no-records">No result found </div>
+          )}
         </div>
-        <div className="selection-lists">
-          <div className="list-item">Certificate discovery</div>
-          <div className="list-item">Get device list</div>
-          <div className="list-item">Cancel request</div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
