@@ -1,0 +1,46 @@
+body {
+  box-sizing: border-box;
+}
+.App {
+  width: 500px;
+}
+.selection-container {
+  widows: 100%;
+}
+
+.selection-container .selection-block {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.selection-container .selection-block .create {
+  padding: 5px;
+}
+
+.selection-container .selection-block .selection-info {
+  display: flex;
+  flex: 1;
+  padding: 5px 10px;
+  border: 1px solid #dedede;
+  border-radius: 4px;
+  color: #333;
+  background-color: #fff;
+}
+
+.selection-container .selection-block .selection-info .selection {
+  flex: 1;
+}
+
+.selection-container .selection-block .selection-info .selection-icons {
+  cursor: pointer;
+}
+
+.selection-container .selection-list-container {
+
+}
+
+.selection-container .selection-list-container .list-search input {
+  width: 100%;
+}
+
