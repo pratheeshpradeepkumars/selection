@@ -1,7 +1,14 @@
 import React, { useRef, useState, useEffect } from "react";
 import SelectionLists from "./SelectionLists";
 
-function Selection({ selectionLists, activeList, onSelect, onDelete, onEdit }) {
+function Selection({
+  selectionLists,
+  activeList,
+  onSelect,
+  onDelete,
+  onEdit,
+  onCreate
+}) {
   const [filteredList, setFilteredList] = useState(null);
   const [toggleList, setToggleList] = useState(false);
   const searchRef = useRef("");
@@ -57,14 +64,20 @@ function Selection({ selectionLists, activeList, onSelect, onDelete, onEdit }) {
       </div>
       {toggleList && (
         <div className="selection-list-container">
-          <div className="list-search">
-            <input
-              ref={searchRef}
-              type="text"
-              onChange={handleSearch}
-              placeholder="Search"
-            />
+          <div className="main-actions">
+            <div className="list-search">
+              <input
+                ref={searchRef}
+                type="text"
+                onChange={handleSearch}
+                placeholder="Search"
+              />
+            </div>
+            <div className="list-create">
+              <button onClick={onCreate}>Create</button>
+            </div>
           </div>
+
           <SelectionLists
             selectionLists={filteredList}
             activeList={activeList}

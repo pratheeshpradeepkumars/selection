@@ -34,11 +34,14 @@ export default function App() {
     e.stopPropagation();
   };
 
+  const handleCreate = () => {};
+
   return (
     <div className="App">
       <Selection
         selectionLists={selectionLists}
         onSelect={handleSelection}
+        onCreate={handleCreate}
         onDelete={handleDelete}
         onEdit={handleEdit}
         activeList={selectedList}
