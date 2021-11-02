@@ -22,10 +22,6 @@ function Selection({ selectionLists, activeList, onSelect, onDelete, onEdit }) {
     setToggleList((prev) => !prev);
   };
 
-  const resetSearchRef = () => {
-    searchRef.current.reset();
-  };
-
   const handleSelect = (e, list) => {
     onSelect(e, list);
     setToggleList(false);
@@ -49,7 +45,7 @@ function Selection({ selectionLists, activeList, onSelect, onDelete, onEdit }) {
     if (toggleList) {
       setFilteredList(selectionLists);
     }
-  }, [toggleList]);
+  }, [toggleList, selectionLists]);
 
   return (
     <div className="selection-container" ref={wrapperRef}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 function SelectionLists({
   selectionLists,
@@ -7,6 +7,18 @@ function SelectionLists({
   onDelete,
   onEdit
 }) {
+  const [confirm, setConfirm] = useState(null);
+
+  const handleDeleteConfirm = (e, list) => {
+    setConfirm(list);
+    e.stopPropagation();
+  };
+
+  const handleDeleteCancel = (e) => {
+    e.stopPropagation();
+    setConfirm(null);
+  };
+
   return (
     <>
       {selectionLists && (
@@ -22,7 +34,19 @@ function SelectionLists({
               <div className="list-name"> {list.label}</div>
               <div className="list-actions">
                 <button onClick={(e) => onEdit(e, list)}>Edit</button>
-                <button onClick={(e) => onDelete(e, list)}>Delete</button>
+
+                {confirm && confirm.value === list.value ? (
+                  <>
+                    <button onClick={(e) => onDelete(e, list)}>Confirm</button>
+                    <button onClick={(e) => handleDeleteCancel(e, list)}>
+                      No
+                    </button>
+                  </>
+                ) : (
+                  <button onClick={(e) => handleDeleteConfirm(e, list)}>
+                    Delete
+                  </button>
+                )}
               </div>
             </div>
           ))}
