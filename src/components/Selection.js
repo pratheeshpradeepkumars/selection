@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import SelectionLists from "./SelectionLists";
 
 function Selection({ selectionLists, activeList, onSelect, onDelete, onEdit }) {
-  const [filteredList, setFilteredList] = useState(selectionLists);
+  const [filteredList, setFilteredList] = useState(null);
   const [toggleList, setToggleList] = useState(false);
   const searchRef = useRef("");
   const wrapperRef = useRef(null);
@@ -22,6 +22,10 @@ function Selection({ selectionLists, activeList, onSelect, onDelete, onEdit }) {
     setToggleList((prev) => !prev);
   };
 
+  const resetSearchRef = () => {
+    searchRef.current.reset();
+  };
+
   const handleSelect = (e, list) => {
     onSelect(e, list);
     setToggleList(false);
@@ -39,7 +43,13 @@ function Selection({ selectionLists, activeList, onSelect, onDelete, onEdit }) {
       // Unbind the event listener on clean up
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [wrapperRef]);
+
+  useEffect(() => {
+    if (toggleList) {
+      setFilteredList(selectionLists);
+    }
+  }, [toggleList]);
 
   return (
     <div className="selection-container" ref={wrapperRef}>
@@ -66,14 +76,19 @@ function Selection({ selectionLists, activeList, onSelect, onDelete, onEdit }) {
             onDelete={onDelete}
             onEdit={onEdit}
           />
-          {filteredList.length === 0 &&
+          {filteredList &&
+            filteredList.length === 0 &&
             searchRef &&
+            searchRef.current &&
             searchRef.current.value === "" && (
               <div className="no-records">No records</div>
             )}
-          {filteredList.length === 0 && searchRef.current.value !== "" && (
-            <div className="no-records">No result found </div>
-          )}
+          {filteredList &&
+            filteredList.length === 0 &&
+            searchRef.current &&
+            searchRef.current.value !== "" && (
+              <div className="no-records">No result found </div>
+            )}
         </div>
       )}
     </div>
